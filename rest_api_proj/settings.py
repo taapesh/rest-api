@@ -37,7 +37,18 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    'rest_api_app',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -70,6 +81,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rest_api_proj.wsgi.application'
 
+
+AUTH_USER_MODEL = 'rest_api_app.MyUser'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
