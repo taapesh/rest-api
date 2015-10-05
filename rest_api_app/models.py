@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 # Create your models here.
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, first_name, last_name, phone, email, password):
+    def create_user(self, first_name, last_name, phone_number, email, password):
         """
         Creates and saves a User with the given email, password, first name and last name.
         """
@@ -17,7 +17,7 @@ class MyUserManager(BaseUserManager):
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
-            phone=phone,
+            phone_number=phone_number,
         )
 
         user.set_password(password)
@@ -52,8 +52,8 @@ class MyUser(AbstractBaseUser):
         unique=False,
         default='',
     )
-    phone = models.CharField(
-        max_length=16,
+    phone_number = models.CharField(
+        max_length=255,
         unique=True,
         default='',
     )
@@ -64,7 +64,7 @@ class MyUser(AbstractBaseUser):
     objects = MyUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name','last_name','phone','password']
+    REQUIRED_FIELDS = ['first_name','last_name','phone_number','password']
 
     def get_full_name(self):
         # The user is identified by their email address
