@@ -19,3 +19,12 @@ class TableSerializer(serializers.ModelSerializer):
             'timeOfFinish',
             'viewIdx',
         )
+
+class OrderSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Order
+        fields = (
+            'customerId',
+            'ownerId',
+        )

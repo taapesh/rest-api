@@ -3,7 +3,7 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 
-# Create your models here.
+
 class Table(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     ownerId = models.IntegerField(default=-1)
@@ -18,9 +18,18 @@ class Table(models.Model):
     timeOfFinish = models.IntegerField(default=-1)
     viewIdx = models.IntegerField(default=-1)
 
-
     class Meta:
         ordering = ('created',)
+
+
+class Order(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    ownerId = models.IntegerField(default=-1)
+    customerId = models.IntegerField(default=-1)
+    customerEmail = models.CharField(max_length=255, default='')
+    customerFirstName = models.CharField(max_length=255, default='')
+    customerLastName = models.CharField(max_length=255, default='')
+    orderPrice = models.DecimalField(max_digits=5, decimal_places=2)
 
 
 class MyUserManager(BaseUserManager):
@@ -82,7 +91,7 @@ class MyUser(AbstractBaseUser):
     objects = MyUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['first_name','last_name','phone_number','password']
     #['first_name','last_name','phone_number','password']
 
     def get_full_name(self):
