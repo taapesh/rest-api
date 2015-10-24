@@ -4,6 +4,24 @@ from django.contrib.auth.models import (
 )
 
 # Create your models here.
+class Table(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    ownerId = models.IntegerField(default=-1)
+    serverId = models.IntegerField(default=-1)
+    partySize = models.IntegerField(default=1)
+    ownerEmail = models.CharField(max_length=255, default='')
+    ownerFirstName = models.CharField(max_length=255, default='')
+    ownerLastName = models.CharField(max_length=255, default='')
+    requestMade = models.BooleanField(default=False)
+    timeOfRequest = models.IntegerField(default=-1)
+    isFinished = models.BooleanField(default=False)
+    timeOfFinish = models.IntegerField(default=-1)
+    viewIdx = models.IntegerField(default=-1)
+
+
+    class Meta:
+        ordering = ('created',)
+
 
 class MyUserManager(BaseUserManager):
     def create_user(self, first_name, last_name, phone_number, email, password):
@@ -64,7 +82,8 @@ class MyUser(AbstractBaseUser):
     objects = MyUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name','last_name','phone_number','password']
+    REQUIRED_FIELDS = []
+    #['first_name','last_name','phone_number','password']
 
     def get_full_name(self):
         # The user is identified by their email address
