@@ -62,12 +62,11 @@ def table_detail(request, ownerId):
 #@permission_classes([permissions.IsAuthenticated])
 def get_table_by_addr(request):
     try:
-        tables = Table.objects.filter(address=request.data.get('addr'))
-        table = tables.get(request.data.get('tableNum'))
+        table = Table.objects.filter(address=request.data.get('addr'), tableNum=request.data.get('tableNum'))
     except Table.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    serializer = TableSerializer(table)
+    serializer = TableSerializer(table, many=True)
     return Response(serializer.data)
 
 
