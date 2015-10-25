@@ -39,7 +39,7 @@ def table_detail(request, ownerId):
     try:
         table = Table.objects.get(ownerId=ownerId)
     except Table.DoesNotExist:
-        return Response({"error":"Table does not exit"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error":"-1"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = TableSerializer(table)
@@ -64,7 +64,7 @@ def get_table_by_addr(request):
     try:
         table = Table.objects.get(address=request.data.get('addr'), tableNum=request.data.get('tableNum'))
     except Table.DoesNotExist:
-        return Response({"error":"Table does not exit"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error":"-1"}, status=status.HTTP_404_NOT_FOUND)
 
     serializer = TableSerializer(table)
     return Response(serializer.data)
