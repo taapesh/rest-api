@@ -61,7 +61,7 @@ def table_detail(request, ownerId):
 #@authentication_classes([TokenAuthentication])
 #@permission_classes([permissions.IsAuthenticated])
 def get_table_by_addr(request):
-    addr = request.data.get('addr')
+    #addr = request.data.get('addr')
     tableNum = request.data.get('tableNum')
 
     try:
