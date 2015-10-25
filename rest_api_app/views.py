@@ -65,7 +65,7 @@ def get_table_by_addr(request):
     tableNum = request.data.get('tableNum')
 
     try:
-        table = Table.objects.filter(address=addr).filter(tableNum=tableNum)
+        table = Table.objects.filter(tableNum=tableNum)
     except Table.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
