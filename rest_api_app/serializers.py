@@ -18,6 +18,8 @@ class TableSerializer(serializers.ModelSerializer):
             'isFinished',
             'timeOfFinish',
             'viewIdx',
+            'address',
+            'tableNum',
         )
 
 class OrderSerializer(serializers.ModelSerializer):
