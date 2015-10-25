@@ -17,6 +17,8 @@ class Table(models.Model):
     isFinished = models.BooleanField(default=False)
     timeOfFinish = models.IntegerField(default=-1)
     viewIdx = models.IntegerField(default=-1)
+    address = models.CharField(max_length=255, default='')
+    tableNum = models.IntegerField(default=-1)
 
     class Meta:
         ordering = ('created',)
@@ -30,6 +32,8 @@ class Order(models.Model):
     customerFirstName = models.CharField(max_length=255, default='')
     customerLastName = models.CharField(max_length=255, default='')
     orderPrice = models.DecimalField(max_digits=5, decimal_places=2)
+    orderName = models.CharField(max_length=255, default='')
+    restaurantAddress = models.CharField(max_length=255, default='')
 
 
 class MyUserManager(BaseUserManager):
