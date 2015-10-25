@@ -62,10 +62,8 @@ def table_detail(request, ownerId):
 #@permission_classes([permissions.IsAuthenticated])
 def get_table_by_addr(request):
     #addr = request.data.get('addr')
-    tableNum = request.data.get('tableNum')
-
     try:
-        table = Table.objects.filter(tableNum=tableNum)
+        table = Table.objects.filter(tableNum=request.data.get('tableNum'))
     except Table.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
