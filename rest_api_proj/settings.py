@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'wo-kd^g3n+--qab^xfopj6z_8cg2hziz)(pad-1dr97=kuizl2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -74,12 +74,18 @@ AUTH_USER_MODEL = 'rest_api_app.MyUser'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
+# Parse database configuration from $DATABASE_URL
+import dj_database_url
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+DATABASES['default'] = dj_database_url.conf()
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+ALLOWED_HOSTS = ['*']
 
 
 # Internationalization
