@@ -37,9 +37,9 @@ class Order(models.Model):
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, first_name, last_name, phone_number, email, password):
+    def create_user(self, first_name, last_name, email, password):
         """
-        Creates and saves a User with the given email, password, first name and last name.
+        Create and save a user
         """
         if not email:
             raise ValueError('Users must have an email address')
@@ -48,7 +48,6 @@ class MyUserManager(BaseUserManager):
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
-            phone_number=phone_number,
         )
 
         user.set_password(password)
@@ -57,7 +56,7 @@ class MyUserManager(BaseUserManager):
 
     def create_superuser(self, email, password):
         """
-        Creates and saves a superuser with the given email and password.
+        Create a superuser
         """
         user = self.create_user(email,
             password=password
@@ -83,11 +82,6 @@ class MyUser(AbstractBaseUser):
         unique=False,
         default='',
     )
-    phone_number = models.CharField(
-        max_length=255,
-        unique=True,
-        default='',
-    )
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -95,8 +89,7 @@ class MyUser(AbstractBaseUser):
     objects = MyUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name','last_name','phone_number','password']
-    #['first_name','last_name','phone_number','password']
+    REQUIRED_FIELDS = ['first_name','last_name','password']
 
     def get_full_name(self):
         # The user is identified by their email address
