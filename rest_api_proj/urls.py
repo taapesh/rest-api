@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url, include
+from django.contrib import admin
 from rest_api_app import views
 
 urlpatterns = patterns('',
