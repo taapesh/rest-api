@@ -1,0 +1,10 @@
+dj-database-url==0.3.0
+dj-static==0.0.6
+Django==1.8.5
+django-toolbelt==0.0.1
+djangorestframework==3.2.4
+-e git+https://github.com/sunscrapers/djoser@281739a99aab67ceaef158c5275e45bcc653222c#egg=djoser-master
+gunicorn==19.4.5
+psycopg2==2.6.1
+static3==0.6.1
+wheel==0.24.0
