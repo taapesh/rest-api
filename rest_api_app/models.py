@@ -7,16 +7,12 @@ class Table(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
     owner_id = models.IntegerField(default=-1)
     server_id = models.IntegerField(default=-1)
-    party_size = models.IntegerField(default=1)
-    owner_email = models.CharField(max_length=255, default='')
-    owner_first_name = models.CharField(max_length=255, default='')
-    owner_last_name = models.CharField(max_length=255, default='')
+    party_size = models.IntegerField(default=0)
     request_made = models.BooleanField(default=False)
     time_of_request = models.IntegerField(default=-1)
     is_finished = models.BooleanField(default=False)
     time_of_finish = models.IntegerField(default=-1)
-    table_number = models.IntegerField(default=-1)
-    restaurant_address = models.CharField(max_length=255, default='')
+    address_table_combo = models.CharField(max_length=255, default='', unique=True)
 
     class Meta:
         ordering = ('time_created',)
@@ -46,7 +42,6 @@ class MyUserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
         )
-
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -65,7 +60,6 @@ class MyUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
 class MyUser(AbstractBaseUser):
     email = models.EmailField(
         verbose_name='email address',
@@ -82,7 +76,9 @@ class MyUser(AbstractBaseUser):
         unique=False,
         default='',
     )
-    active_table_id = models.IntegerField(default=-1)
+    active_table_number = models.IntegerField(default=-1)
+    active_restaurant = models.CharField(max_length=255,default='')
+    address_table_combo = models.CharField(max_length=255, default='')
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 

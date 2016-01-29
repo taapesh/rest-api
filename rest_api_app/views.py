@@ -12,32 +12,27 @@ from rest_api_app.serializers import TableSerializer, UserSerializer
 #@authentication_classes([TokenAuthentication])
 #@permission_classes([permissions.IsAuthenticated])
 def create_or_join_table(request):
-    try:
-        table = Table.objects.get(restaurant_address=request.data.get('restaurant_address'))
-    except Table.DoesNotExist:
-        serializer = TableSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            user = MyUser.objects.get(id=request.data.get('user_id'))
-            user.active_table_id = serializer.data.get('id')
-            user.save()
-            return Response({
-                "message": "table created",
-                "table_id": serializer.data.get('id')
-            }, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # Find server id to assign
+    restaurant_address = request.data.get("restaurant_address")
+    table_number = request.data.get("table_number")
+    address_table_combo = request.data.get('address_table_combo')
+    server_id = find_server(restaurant_address)
 
-    # Table already exists, join it
+    # Attempt to create table, if does not exist
+    table = Table.get_or_create(
+        address_table_combo=address_table_combo,
+        defaults={"server_id":server_id}
+    )
     table.party_size += 1
     table.save()
 
-    # Set user's active table to the table found
-    user = MyUser.objects.get(id=request.data.get('user_id'))
-    user.active_table_id = table.id
-    user.save()
+    user = MyUser.objects.get(id=request.data.get("user_id"))
+    user.address_table_combo = address_table_combo
+    user.active_table_number = table_number
+    user.active_restaurant = restaurant_address
+    
     return Response({
-        "message": "table joined",
-        "table_id": table.id,
+        "message": "Joined table",
         "party_size": table.party_size
     }, status=status.HTTP_200_OK)
 
@@ -46,7 +41,7 @@ def create_or_join_table(request):
 #@permission_classes([permissions.IsAuthenticated])
 def delete_table(request):
     try:
-        table = Table.objects.get(owner_id=request.data.get('owner_id'))
+        table = Table.objects.get(address_table_combo=request.data.get('address_table_combo'))
     except Table.DoesNotExist:
         return Response({"error":"Table does not exist"}, status=status.HTTP_404_NOT_FOUND)
     table.delete()
@@ -68,6 +63,6 @@ def get_users_at_table(request):
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
-def find_server():
-    return
+def find_server(restaurant_address):
+    return 1
 

@@ -9,8 +9,8 @@ urlpatterns = patterns('',
 urlpatterns += [
     url(r'^admin/', admin.site.urls),
 
-    url(r'^createtable/', views.create_or_join_table),
-    url(r'^alltables/', views.get_all_tables),
-    url(r'^deletetable/', views.delete_table),
-    url(r'^usersattable/', views.get_users_at_table),
+    url(r'^create_table/', views.create_or_join_table),
+    url(r'^all_tables/', views.get_all_tables),
+    url(r'^delete_table/', views.delete_table),
+    url(r'^users_at_table/', views.get_users_at_table),
 ]
