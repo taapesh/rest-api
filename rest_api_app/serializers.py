@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from models import Table, Order
+from models import Table
 
 class TableSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Table
         fields = (
-            'created',
+            'timeCreated',
             'ownerId',
             'serverId',
             'partySize',
@@ -17,16 +17,5 @@ class TableSerializer(serializers.ModelSerializer):
             'timeOfRequest',
             'isFinished',
             'timeOfFinish',
-            'viewIdx',
-            'address',
-            'tableNum',
-        )
-
-class OrderSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Order
-        fields = (
-            'customerId',
-            'ownerId',
+            'tableNumber',
         )
