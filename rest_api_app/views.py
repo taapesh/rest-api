@@ -28,6 +28,15 @@ def table_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+#@authentication_classes([TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
+def create_table(request):
+    serializer = TableSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 #@authentication_classes([TokenAuthentication])
