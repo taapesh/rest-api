@@ -7,28 +7,44 @@ class Table(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
     owner_id = models.IntegerField(default=-1)
     server_id = models.IntegerField(default=-1)
-    party_size = models.IntegerField(default=0)
+    party_size = models.IntegerField(default=1)
     request_made = models.BooleanField(default=False)
     time_of_request = models.IntegerField(default=-1)
     is_finished = models.BooleanField(default=False)
     time_of_finish = models.IntegerField(default=-1)
-    address_table_combo = models.CharField(max_length=255, default='', unique=True)
+    address_table_combo = models.CharField(max_length=255, default="", unique=True)
+    restaurant_name = models.CharField(max_length=255, default="")
     new_table = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('time_created',)
 
 class Order(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    owner_id = models.IntegerField(default=-1)
+    time_created = models.DateTimeField(auto_now_add=True)
     customer_id = models.IntegerField(default=-1)
-    customer_email = models.CharField(max_length=255, default='')
-    customer_first_name = models.CharField(max_length=255, default='')
-    customer_last_name = models.CharField(max_length=255, default='')
+    order_name = models.CharField(max_length=255, default="")
     order_price = models.DecimalField(max_digits=5, decimal_places=2)
-    order_name = models.CharField(max_length=255, default='')
-    restaurant_address = models.CharField(max_length=255, default='')
+    customer_first_name = models.CharField(max_length=255, default="")
+    address_table_combo = models.CharField(max_length=255, default="")
+    table_number = models.IntegerField(default=-1)
+    restaurant_address = models.CharField(max_length=255, default="")
+    new_order = models.BooleanField(default=True)
+    active_order = models.BooleanField(default=True)
+    order_queued = models.BooleanField(default=False)
+    payment_pending = models.BooleanField(default=False)
+    receipt_id = models.IntegerField(default=-1)
 
+class Receipt(models.Model):
+    customer_id = models.IntegerField(default=-1)
+    total_bill = models.DecimalField(max_digits=6, decimal_places=2)
+    restaurant_name = models.CharField(max_length=255, default="")
+    restaurant_address = models.CharField(max_length=255, default="")
+    server_name = models.CharField(max_length=255, default="")
+    server_rating = models.IntegerField(default=-1)
+
+class TableRequest(models.Model):
+    time_of_request = models.DateTimeField(auto_now_add=True)
+    address_table_combo = models.CharField(max_length=255, default="", unique=True)
 
 class MyUserManager(BaseUserManager):
     def create_user(self, first_name, last_name, email, password):
@@ -36,7 +52,7 @@ class MyUserManager(BaseUserManager):
         Create and save a user
         """
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError("Users must have an email address")
 
         user = self.model(
             email=self.normalize_email(email),
@@ -63,30 +79,30 @@ class MyUserManager(BaseUserManager):
 
 class MyUser(AbstractBaseUser):
     email = models.EmailField(
-        verbose_name='email address',
+        verbose_name="email address",
         max_length=255,
         unique=True,
     )
     first_name = models.CharField(
         max_length=255,
         unique=False,
-        default='',
+        default="",
     )
     last_name = models.CharField(
         max_length=255,
         unique=False,
-        default='',
+        default="",
     )
     active_table_number = models.IntegerField(default=-1)
-    active_restaurant = models.CharField(max_length=255,default='')
-    address_table_combo = models.CharField(max_length=255, default='')
+    active_restaurant = models.CharField(max_length=255,default="")
+    address_table_combo = models.CharField(max_length=255, default="")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
     objects = MyUserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name','last_name','password']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["first_name","last_name","password"]
 
     def get_full_name(self):
         return self.email

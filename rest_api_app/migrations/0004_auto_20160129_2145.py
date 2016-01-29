@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rest_api_app', '0005_auto_20160129_1403'),
+        ('rest_api_app', '0003_auto_20160129_2113'),
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='table',
-            name='new_table',
-            field=models.BooleanField(default=False),
+            name='party_size',
+            field=models.IntegerField(default=1),
         ),
     ]
