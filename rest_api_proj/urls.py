@@ -17,4 +17,5 @@ urlpatterns += [
     url(r'^createtable/', views.create_or_join_table),
     url(r'^alltables/', views.get_all_tables),
     url(r'^deletetable/', views.delete_table),
+    url(r'^usersattable/', views.get_users_at_table),
 ]

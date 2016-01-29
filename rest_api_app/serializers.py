@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import Table
+from models import Table, MyUser
 
 class TableSerializer(serializers.ModelSerializer):
 
@@ -20,4 +20,12 @@ class TableSerializer(serializers.ModelSerializer):
             'timeOfFinish',
             'tableNumber',
             'restaurantAddress',
+        )
+
+class UserSerializer(serializer.ModelSerializer):
+
+    class Meta:
+        model = MyUser
+        fields = (
+            'firstName',
         )

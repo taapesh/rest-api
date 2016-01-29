@@ -6,7 +6,7 @@ from rest_framework import permissions
 from rest_framework.authentication import TokenAuthentication
 
 from rest_api_app.models import Table, MyUser
-from rest_api_app.serializers import TableSerializer
+from rest_api_app.serializers import TableSerializer, UserSerializer
 
 @api_view(['POST'])
 #@authentication_classes([TokenAuthentication])
@@ -60,6 +60,14 @@ def delete_table(request):
 def get_all_tables(request):
     tables = Table.objects.all()
     serializer = TableSerializer(tables, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+#@authentication_classes([TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
+def get_users_at_table(request):
+    users = MyUser.objects.all().filter(activeTableId=request.data.get('id'))
+    serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
 def find_server():
