@@ -7,19 +7,19 @@ class TableSerializer(serializers.ModelSerializer):
         model = Table
         fields = (
             'id',
-            'timeCreated',
-            'ownerId',
-            'serverId',
-            'partySize',
-            'ownerEmail',
-            'ownerFirstName',
-            'ownerLastName',
-            'requestMade',
-            'timeOfRequest',
-            'isFinished',
-            'timeOfFinish',
-            'tableNumber',
-            'restaurantAddress',
+            'time_created',
+            'owner_id',
+            'server_id',
+            'party_size',
+            'owner_email',
+            'owner_first_name',
+            'owner_last_name',
+            'request_made',
+            'time_of_request',
+            'is_finished',
+            'time_of_finish',
+            'table_number',
+            'restaurant_address',
         )
 
 class UserSerializer(serializers.ModelSerializer):
@@ -27,5 +27,5 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields = (
-            'firstName',
+            'first_name',
         )
