@@ -8,6 +8,36 @@ from rest_framework.authentication import TokenAuthentication
 from rest_api_app.models import Table
 from rest_api_app.serializers import TableSerializer
 
+@api_view(['POST'])
+#@authentication_classes([TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
+def create_table(request):
+    serializer = TableSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+#@authentication_classes([TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
+def delete_table(request):
+    try:
+        table = Table.objects.get(ownerId=request.data.get('ownerId'))
+    except Table.DoesNotExist:
+        return Response({"error":"Table does not exist"}, status=status.HTTP_404_NOT_FOUND)
+    table.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+#@authentication_classes([TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
+def get_all_tables(request):
+    tables = Table.objects.all()
+    serializer = TableSerializer(tables, many=True)
+    return Response(serializer.data)
+
+
 
 @api_view(['GET', 'POST'])
 #@authentication_classes([TokenAuthentication])
@@ -28,24 +58,6 @@ def table_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
-def create_table(request):
-    serializer = TableSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET'])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
-def get_all_tables(request):
-    tables = Table.objects.all()
-    serializer = TableSerializer(tables, many=True)
-    return Response(serializer.data)
-    
 @api_view(['GET', 'PUT', 'DELETE'])
 #@authentication_classes([TokenAuthentication])
 #@permission_classes([permissions.IsAuthenticated])

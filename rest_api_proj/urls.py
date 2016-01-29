@@ -16,4 +16,5 @@ urlpatterns += [
 
     url(r'^createtable/', views.create_table),
     url(r'^alltables/', views.get_all_tables),
+    url(r'^deletetable/', views.delete_table),
 ]
