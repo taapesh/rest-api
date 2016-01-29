@@ -21,7 +21,7 @@ def create_or_join_table(request):
             #user = MyUser.objects.get(id=request.data.get('userId'))
             #user.activeTableId = serializer.data.id
             #user.save()
-            return Response({"table created": serializer.data.partySize}, status=status.HTTP_201_CREATED)
+            return Response({"table created": serializer.data.get('partySize')}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Table already exists, join it
