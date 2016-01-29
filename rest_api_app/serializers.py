@@ -18,4 +18,5 @@ class TableSerializer(serializers.ModelSerializer):
             'isFinished',
             'timeOfFinish',
             'tableNumber',
+            'restaurantAddress',
         )

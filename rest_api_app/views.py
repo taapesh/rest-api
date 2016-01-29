@@ -5,18 +5,33 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework import permissions
 from rest_framework.authentication import TokenAuthentication
 
-from rest_api_app.models import Table
+from rest_api_app.models import Table, MyUser
 from rest_api_app.serializers import TableSerializer
 
 @api_view(['POST'])
 #@authentication_classes([TokenAuthentication])
 #@permission_classes([permissions.IsAuthenticated])
-def create_table(request):
-    serializer = TableSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+def create_or_join_table(request):
+    try:
+        table = Table.objects.get(restaurantAddress=request.data.get('restaurantAddress'))
+    except Table.DoesNotExist:
+        serializer = TableSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            user = MyUser.objects.get(id=request.data.get('userId'))
+            user.activeTableId = serializer.data.id
+            user.save()
+            return Response({"table created":serializer.data.id + " " + serializer.data.partySize}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Table already exists, join it
+    table.partySize += 1
+    table.save()
+    user = MyUser.objects.get(id=request.data.get('userId'))
+    user.activeTableId = table.id
+    user.save()
+    return Response({"table joined":table.id + " " + table.partySize}, status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['POST'])
 #@authentication_classes([TokenAuthentication])
@@ -36,6 +51,10 @@ def get_all_tables(request):
     tables = Table.objects.all()
     serializer = TableSerializer(tables, many=True)
     return Response(serializer.data)
+
+def find_server():
+    return
+
 
 
 

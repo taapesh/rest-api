@@ -16,10 +16,10 @@ class Table(models.Model):
     isFinished = models.BooleanField(default=False)
     timeOfFinish = models.IntegerField(default=-1)
     tableNumber = models.IntegerField(default=-1)
+    restaurantAddress = models.CharField(max_length=255, default='')
 
     class Meta:
         ordering = ('timeCreated',)
-
 
 class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -82,7 +82,7 @@ class MyUser(AbstractBaseUser):
         unique=False,
         default='',
     )
-
+    active_table_id = models.IntegerField(default=-1)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
