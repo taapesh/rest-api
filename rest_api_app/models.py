@@ -13,6 +13,7 @@ class Table(models.Model):
     is_finished = models.BooleanField(default=False)
     time_of_finish = models.IntegerField(default=-1)
     address_table_combo = models.CharField(max_length=255, default='', unique=True)
+    new_table = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('time_created',)

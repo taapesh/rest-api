@@ -19,9 +19,9 @@ def create_or_join_table(request):
     server_id = find_server(restaurant_address)
 
     # Attempt to create table, if does not exist
-    table = Table.objects.get_or_create(
+    table, created = Table.objects.get_or_create(
         address_table_combo=address_table_combo,
-        defaults={"server_id":server_id}
+        defaults={"server_id": server_id}
     )
     table.party_size += 1
     table.save()
@@ -30,6 +30,7 @@ def create_or_join_table(request):
     user.address_table_combo = address_table_combo
     user.active_table_number = table_number
     user.active_restaurant = restaurant_address
+    user.save()
     
     return Response({
         "message": "Joined table",
