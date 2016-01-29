@@ -22,7 +22,7 @@ class TableSerializer(serializers.ModelSerializer):
             'restaurantAddress',
         )
 
-class UserSerializer(serializer.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MyUser
