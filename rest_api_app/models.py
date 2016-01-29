@@ -3,9 +3,8 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 
-
 class Table(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    timeCreated = models.DateTimeField(auto_now_add=True)
     ownerId = models.IntegerField(default=-1)
     serverId = models.IntegerField(default=-1)
     partySize = models.IntegerField(default=1)
@@ -16,9 +15,7 @@ class Table(models.Model):
     timeOfRequest = models.IntegerField(default=-1)
     isFinished = models.BooleanField(default=False)
     timeOfFinish = models.IntegerField(default=-1)
-    viewIdx = models.IntegerField(default=-1)
-    address = models.CharField(max_length=255, default='')
-    tableNum = models.IntegerField(default=-1)
+    tableNumber = models.IntegerField(default=-1)
 
     class Meta:
         ordering = ('created',)
