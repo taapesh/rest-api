@@ -64,6 +64,15 @@ def get_users_at_table(request):
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
+def request_service(request):
+    try:
+        table = Table.objects.get(address_table_combo=request.data.get('address_table_combo'))
+    except Table.DoesNotExist:
+        return Response({"error":"Table does not exist"}, status=status.HTTP_404_NOT_FOUND)
+    table.request_made = True
+    return Response({"success": "Table service requested"}, status=status.HTTP_200_OK)
+
+
 def find_server(restaurant_address):
     return 1
 
