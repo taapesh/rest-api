@@ -13,7 +13,7 @@ from rest_api_app.serializers import TableSerializer, UserSerializer
 #@permission_classes([permissions.IsAuthenticated])
 def create_or_join_table(request):
     try:
-        table = Table.objects.get(restaurantAddress=request.data.get('restaurant_address'))
+        table = Table.objects.get(restaurant_address=request.data.get('restaurant_address'))
     except Table.DoesNotExist:
         serializer = TableSerializer(data=request.data)
         if serializer.is_valid():
