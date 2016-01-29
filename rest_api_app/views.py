@@ -18,19 +18,29 @@ def create_or_join_table(request):
         serializer = TableSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            #user = MyUser.objects.get(id=request.data.get('userId'))
-            #user.activeTableId = serializer.data.id
-            #user.save()
-            return Response({"table created": serializer.data.get('partySize')}, status=status.HTTP_201_CREATED)
+            user = MyUser.objects.get(id=request.data.get('userId'))
+            user.activeTableId = serializer.data.get('id')
+            user.save()
+            return Response({
+                "message": "table created",
+                "table_id": serializer.data.get('id'),
+                "party_size": serializer.data.get('partySize')
+            }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Table already exists, join it
     table.partySize += 1
     table.save()
+
+    # Set user's active table to the table found
     user = MyUser.objects.get(id=request.data.get('userId'))
     user.activeTableId = table.id
     user.save()
-    return Response({"table joined":table.id + " " + table.partySize}, status=status.HTTP_204_NO_CONTENT)
+    return Response({
+        "message": "table joined",
+        "table_id": table.id,
+        "party_size": table.partySize
+    }, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -42,7 +52,7 @@ def delete_table(request):
     except Table.DoesNotExist:
         return Response({"error":"Table does not exist"}, status=status.HTTP_404_NOT_FOUND)
     table.delete()
-    return Response({"result":"table deleted"}, status=status.HTTP_204_NO_CONTENT)
+    return Response({"result":"table deleted"}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 #@authentication_classes([TokenAuthentication])
