@@ -6,6 +6,7 @@ class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
         fields = (
+            'id',
             'timeCreated',
             'ownerId',
             'serverId',
