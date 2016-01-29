@@ -18,7 +18,7 @@ class Table(models.Model):
     tableNumber = models.IntegerField(default=-1)
 
     class Meta:
-        ordering = ('created',)
+        ordering = ('timeCreated',)
 
 
 class Order(models.Model):
