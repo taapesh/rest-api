@@ -19,7 +19,7 @@ def create_or_join_table(request):
     server_id = find_server(restaurant_address)
 
     # Attempt to create table, if does not exist
-    table = Table.get_or_create(
+    table = Table.objects.get_or_create(
         address_table_combo=address_table_combo,
         defaults={"server_id":server_id}
     )
@@ -45,7 +45,7 @@ def delete_table(request):
     except Table.DoesNotExist:
         return Response({"error":"Table does not exist"}, status=status.HTTP_404_NOT_FOUND)
     table.delete()
-    return Response({"result": "table deleted"}, status=status.HTTP_200_OK)
+    return Response({"success": "Table deleted"}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 #@authentication_classes([TokenAuthentication])
@@ -59,7 +59,7 @@ def get_all_tables(request):
 #@authentication_classes([TokenAuthentication])
 #@permission_classes([permissions.IsAuthenticated])
 def get_users_at_table(request):
-    users = MyUser.objects.all().filter(active_table_id=request.data.get('id'))
+    users = MyUser.objects.all().filter(address_table_combo=request.data.get('address_table_combo'))
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
