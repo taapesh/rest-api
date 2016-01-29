@@ -62,6 +62,7 @@ def get_all_tables(request):
     serializer = TableSerializer(tables, many=True)
     return Response(serializer.data)
 
+'''
 @api_view(['GET'])
 #@authentication_classes([TokenAuthentication])
 #@permission_classes([permissions.IsAuthenticated])
@@ -69,7 +70,7 @@ def get_users_at_table(request):
     users = MyUser.objects.all().filter(activeTableId=request.data.get('id'))
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
-
+'''
 def find_server():
     return
 
