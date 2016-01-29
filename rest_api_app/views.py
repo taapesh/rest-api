@@ -18,9 +18,9 @@ def create_or_join_table(request):
         serializer = TableSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            user = MyUser.objects.get(id=request.data.get('userId'))
-            user.activeTableId = serializer.data.id
-            user.save()
+            #user = MyUser.objects.get(id=request.data.get('userId'))
+            #user.activeTableId = serializer.data.id
+            #user.save()
             return Response({"table created":serializer.data.id + " " + serializer.data.partySize}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -42,7 +42,7 @@ def delete_table(request):
     except Table.DoesNotExist:
         return Response({"error":"Table does not exist"}, status=status.HTTP_404_NOT_FOUND)
     table.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response({"result":"table deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
 #@authentication_classes([TokenAuthentication])
