@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import MyUser, Table, Order
+from models import MyUser, Table, Order, Receipt
 
 class TableSerializer(serializers.ModelSerializer):
 
@@ -26,10 +26,24 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = (
             "id",
+            "customer_id",
             "order_name",
             "order_price",
             "customer_first_name",
             "table_number",
             "restaurant_address",
             "address_table_combo",
+        )
+
+class ReceiptSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Receipt
+        fields = (
+            "customer_id",
+            "total_bill",
+            "restaurant_name",
+            "restaurant_address",
+            "server_name",
+            "server_rating",
         )

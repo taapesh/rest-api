@@ -18,4 +18,6 @@ urlpatterns += [
     url(r"^check_for_request/", views.has_request),
     url(r"^place_order/", views.place_order),
     url(r"^get_table_orders/", views.get_table_orders),
+    url(r"^finish_and_pay/", views.finish_and_pay),
+    url(r"^get_receipts/", views.get_receipts),
 ]

@@ -5,8 +5,8 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework import permissions
 from rest_framework.authentication import TokenAuthentication
 
-from rest_api_app.models import Table, MyUser, Order, TableRequest
-from rest_api_app.serializers import UserSerializer, TableSerializer, OrderSerializer
+from rest_api_app.models import Table, MyUser, Order, TableRequest, Receipt
+from rest_api_app.serializers import UserSerializer, TableSerializer, OrderSerializer, ReceiptSerializer
 
 from django.db.models import Sum
 from django.db.models import F
@@ -129,26 +129,42 @@ def order_delivered(request):
 def finish_and_pay(request):
     address_table_combo = request.data.get("address_table_combo")
     table = get_table(address_table_combo)
-    customer_id = request.data.get("user_id")
+
+    if table is None:
+        return Response({"error": "Table does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    user_id = request.data.get("user_id")
     orders = Order.objects.filter(
-        customer_id=customer_id, address_table_combo=address_table_combo, active_order=True)
+        customer_id=user_id, address_table_combo=address_table_combo, active_order=True)
 
-    subtotal = orders.aggregate(Sum("order_price"))
-    # add tax and attempt payment
-    total = subtotal
+    total = 0.00
+    if orders:
+        subtotal = orders.aggregate(Sum("order_price")).get("order_price__sum", 0.00)
 
+        # Add tax, attempt payment
+        total = subtotal
+
+        # If payment successful
+    
     # Assuming payment was successful
-    table.party_size = F("party_size") - 1
+    table.party_size -= 1
+    table.save()
+    """
+    if table.party_size == 0:
+        table.delete()
+    """    
+
     receipt = Receipt(
-        customer_id=customer_id,
+        customer_id=user_id,
         total_bill=total,
         server_name=request.data.get("server_name"),
         restaurant_name=request.data.get("restaurant_name"),
         restaurant_address=request.data.get("restaurant_address"),
-        server_rating=request.data.get("server_rating")
+        server_rating=request.data.get("server_rating", -1)
     )
     receipt.save()
     orders.update(payment_pending=False, active_order=False, receipt_id=receipt.id)
+    
     """
     Order.objects
         .filter(customer_id=customer_id)
@@ -167,4 +183,26 @@ def get_table_orders(request):
     orders = Order.objects.filter(address_table_combo=address_table_combo, active_order=True)
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data)
+
+def get_table(address_table_combo):
+    try:
+        table = Table.objects.get(address_table_combo=address_table_combo)
+        return table
+    except Table.DoesNotExist:
+        None
+
+@api_view(["GET"])
+#@authentication_classes([TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
+def get_receipts(request):
+    receipts = Receipt.objects.filter(customer_id=request.data.get("user_id"))
+    serializer = ReceiptSerializer(receipts, many=True)
+    return Response(serializer.data)
+
+@api_view(["POST"])
+#@authentication_classes([TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
+def delete_all_orders(request):
+    Order.objects.all().delete()
+    return Response({"success": "Deleted orders"})
 

@@ -36,7 +36,7 @@ class Order(models.Model):
 
 class Receipt(models.Model):
     customer_id = models.IntegerField(default=-1)
-    total_bill = models.DecimalField(max_digits=6, decimal_places=2)
+    total_bill = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
     restaurant_name = models.CharField(max_length=255, default="")
     restaurant_address = models.CharField(max_length=255, default="")
     server_name = models.CharField(max_length=255, default="")
