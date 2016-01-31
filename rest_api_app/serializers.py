@@ -11,6 +11,8 @@ class TableSerializer(serializers.ModelSerializer):
             "party_size",
             "address_table_combo",
             "request_made",
+            "restaurant_name",
+            "restaurant_address",
         )
 
 class UserSerializer(serializers.ModelSerializer):
