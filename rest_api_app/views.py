@@ -29,9 +29,9 @@ def get_all_users(request):
 
 @api_view(["POST"])
 def login(request):
-    return Response({"success": "Made it"}, status=status.HTTP_200_OK)
     email = request.data.get("email")
     password = request.data.get("password")
+    return Response({"success": "Made it"}, status=status.HTTP_200_OK)
 
     try:
         user = MyUser.objects.get(email=email)
