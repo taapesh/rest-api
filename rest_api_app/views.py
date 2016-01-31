@@ -36,10 +36,16 @@ def login(request):
         user = MyUser.objects.get(email=email)
         if user.check_password(password):
             token = Token.objects.get_or_create(user=user)
-            return Response({"auth_token": token[0].key}, status=status.HTTP_200_OK)
+            return Response({
+                "auth_token": token[0].key,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "user_id": user.id
+            }, status=status.HTTP_200_OK)
 
     except MyUser.DoesNotExist:
-        return Response({"error": "There was a problem"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "There was a problem"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
