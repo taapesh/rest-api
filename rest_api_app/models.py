@@ -48,9 +48,6 @@ class TableRequest(models.Model):
 
 class MyUserManager(BaseUserManager):
     def create_user(self, first_name, last_name, email, password):
-        """
-        Create and save a user
-        """
         if not email:
             raise ValueError("Users must have an email address")
 
@@ -64,9 +61,6 @@ class MyUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, first_name, last_name):
-        """
-        Create a superuser
-        """
         user = self.create_user(
             email=email,
             password=password,

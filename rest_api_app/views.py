@@ -1,15 +1,66 @@
 from rest_framework import status
 from rest_framework.response import Response
 
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework import permissions
 from rest_framework.authentication import TokenAuthentication
 
-from rest_api_app.models import Table, MyUser, Order, TableRequest, Receipt
+from rest_api_app.models import Table, MyUser, Order, TableRequest, Receipt, MyUserManager
 from rest_api_app.serializers import UserSerializer, TableSerializer, OrderSerializer, ReceiptSerializer
 
 from django.db.models import Sum
 from django.db.models import F
+
+from django.db import IntegrityError
+
+@api_view(["GET"])
+def get_all_users(request):
+    users = MyUser.objects.all()
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
+
+@api_view(["POST"])
+def login(request):
+    email = request.data.get("email")
+    password = request.data.get("password")
+
+    try:
+        user = MyUser.objects.get(email=email)
+        if user.check_password(password):
+            token = Token.objects.get_or_create(user=user)
+            return Response({"auth_token": token[0].key})
+
+    except MyUser.DoesNotExist:
+        return Response({"error": "There was a problem"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["POST"])
+#@authentication_classes([TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
+def logout(request):
+    Token.objects.filter(user=request.user).delete()
+    return Response({"success": "Logged out successfully"})
+
+@api_view(["POST"])
+def register(request):
+    first_name = request.data.get("first_name")
+    last_name = request.data.get("last_name")
+    email = request.data.get("email")
+    password = request.data.get("password")
+    
+    try:
+        user = MyUser.objects.create_user(first_name, last_name, email, password)
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except IntegrityError:
+        return Response({"error": "Email is already in use"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["GET"])
+#@authentication_classes([TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
+def get_user_info(request):
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
 #@authentication_classes([TokenAuthentication])

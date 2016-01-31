@@ -1,13 +1,12 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url
 from django.contrib import admin
 from rest_api_app import views
 
-urlpatterns = patterns("",
-    url(r"^auth/", include("djoser.urls.authtoken")),
-)
-
-urlpatterns += [
+urlpatterns = [
     url(r"^admin/", admin.site.urls),
+    url(r"^login/", views.login),
+    url(r"^logout/", views.logout),
+    url(r"^register/", views.register),
 
     url(r"^create_table/", views.create_or_join_table),
     url(r"^all_tables/", views.get_all_tables),
@@ -22,4 +21,6 @@ urlpatterns += [
     url(r"^finish_and_pay/", views.finish_and_pay),
     url(r"^get_receipts/", views.get_receipts),
     url(r"^get_orders/", views.get_orders),
+    url(r"^get_user_info", views.get_user_info),
+    url(r"^get_all_users/", views.get_all_users),
 ]

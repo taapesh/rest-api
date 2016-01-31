@@ -18,6 +18,10 @@ class UserSerializer(serializers.ModelSerializer):
         model = MyUser
         fields = (
             "first_name",
+            "last_name",
+            "email",
+            "active_table_number",
+            "active_restaurant",
         )
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -48,4 +52,3 @@ class ReceiptSerializer(serializers.ModelSerializer):
             "server_name",
             "server_rating",
         )
-        

@@ -1,21 +1,12 @@
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'wo-kd^g3n+--qab^xfopj6z_8cg2hziz)(pad-1dr97=kuizl2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
-# Application definition
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -27,7 +18,6 @@ INSTALLED_APPS = (
 
     'rest_framework',
     'rest_framework.authtoken',
-    'djoser',
     'rest_api_app',
 )
 
@@ -79,10 +69,6 @@ WSGI_APPLICATION = 'rest_api_proj.wsgi.application'
 
 AUTH_USER_MODEL = 'rest_api_app.MyUser'
 
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-# Parse database configuration from $DATABASE_URL
 import dj_database_url
 DATABASES = {
     'default': {
@@ -95,10 +81,6 @@ DATABASES = {
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 ALLOWED_HOSTS = ['*']
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.8/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -109,7 +91,4 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
