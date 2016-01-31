@@ -35,8 +35,8 @@ def login(request):
         return Response({"error": "There was a problem"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["POST"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def logout(request):
     Token.objects.filter(user=request.user).delete()
     return Response({"success": "Logged out successfully"})
@@ -55,16 +55,16 @@ def register(request):
     except IntegrityError:
         return Response({"error": "Email is already in use"}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(["GET"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def get_user_info(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def create_or_join_table(request):
     # Find server id to assign
     address_table_combo = request.data.get("address_table_combo")
@@ -93,38 +93,38 @@ def create_or_join_table(request):
     }, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def delete_table(request):
     Table.objects.filter(address_table_combo=request.data.get("address_table_combo")).delete()
     return Response({"success": "Table deleted"}, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def get_all_tables(request):
     serializer = TableSerializer(Table.objects.all(), many=True)
     return Response(serializer.data)
 
 @api_view(["GET"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def get_server_tables(request):
     tables = Table.objects.filter(server_id=request.data.get("user_id"))
     serializer = TableSerializer(tables, many=True)
     return Response(serializer.data)
 
 @api_view(["GET"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def get_users_at_table(request):
     users = MyUser.objects.filter(address_table_combo=request.data.get("address_table_combo"))
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
 @api_view(["POST"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def request_service(request):
     table_request, created = TableRequest.objects.get_or_create(
         address_table_combo=request.data.get("address_table_combo"),
@@ -135,15 +135,15 @@ def request_service(request):
         return Response({"error": "Request already made"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["POST"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def serve_request(request):
     TableRequest.objects.filter(address_table_combo=request.data.get("address_table_combo")).delete()
     return Response({"success": "Request served"}, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def has_request(request):
     return Response({
         "request_made": TableRequest.objects
@@ -155,8 +155,8 @@ def find_server(restaurant_address):
     return 1
 
 @api_view(["POST"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def place_order(request):
     """ Provide order_name, order_price, customer_first_name, address_table_combo, restaurant_address table_number """
     # Check if table exists first?
@@ -169,22 +169,22 @@ def place_order(request):
         return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["POST"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def queue_order(request):
     Order.objects.get(id=request.data.get("id")).update(new_order=False, order_queued=True)
     return Response({"message": "Order queued"}, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def order_delivered(request):
     Order.objects.get(id=request.data.get("id")).update(order_queued=False, payment_pending=True)
     return Response({"message": "Order delivered, payment pending"}, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def finish_and_pay(request):
     address_table_combo = request.data.get("address_table_combo")
     table = get_table(address_table_combo)
@@ -227,8 +227,8 @@ def finish_and_pay(request):
     return Response({"message": "Payment successful", "bill": total}, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def get_table_orders(request):
     address_table_combo = request.data.get("address_table_combo")
     orders = Order.objects.filter(address_table_combo=address_table_combo, active_order=True)
@@ -243,16 +243,16 @@ def get_table(address_table_combo):
         None
 
 @api_view(["GET"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def get_receipts(request):
     receipts = Receipt.objects.filter(customer_id=request.data.get("user_id"))
     serializer = ReceiptSerializer(receipts, many=True)
     return Response(serializer.data)
 
 @api_view(["GET"])
-#@authentication_classes([TokenAuthentication])
-#@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def get_orders(request):
     orders = Order.objects.filter(customer_id=request.data.get("user_id"))
     serializer = OrderSerializer(orders, many=True)
