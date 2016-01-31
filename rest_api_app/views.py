@@ -92,7 +92,7 @@ def create_or_join_table(request):
     address_table_combo = request.data.get("address_table_combo")
     restaurant_address = request.data.get("restaurant_address")
     restaurant_name = request.data.get("restaurant_name")
-    server_id = find_server(restaurant_address)
+    server = find_server(restaurant_address)
 
     # Attempt to create table, if does not exist
     table, created = Table.objects.get_or_create(
@@ -101,7 +101,8 @@ def create_or_join_table(request):
     if not created:
         table.party_size += 1
     else:
-        table.server_id = server_id
+        table.server_id = server.get("server_id")
+        table.server_name = server.get("server_name")
         table.restaurant_name = restaurant_name
     table.save()
 
@@ -114,7 +115,9 @@ def create_or_join_table(request):
     return Response({
         "message": "Joined table",
         "party_size": table.party_size,
-        "restaurant_name": table.restaurant_name
+        "restaurant_name": table.restaurant_name,
+        "server_id": table.server_id,
+        "server_name": table.server_name,
     }, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
@@ -177,7 +180,22 @@ def has_request(request):
     })
 
 def find_server(restaurant_address):
-    return 1
+    servers = list(MyUser.objects.filter(working_restaurant=restaurant_address, is_working=True))
+    
+    if not servers:
+        {"server_id": -1, "server_name": ""}
+
+    min_load_server_id = -1
+    min_load = 1000
+    
+    for server in servers:
+        load = Table.objects.filter(server_id=server.id).count()
+        if load < min_load:
+            min_load = load
+            min_load_server_id = server.id
+            
+    return {"server_id": min_load_server_id, "server_name": server.first_name}
+
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])

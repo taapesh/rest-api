@@ -7,6 +7,7 @@ class TableSerializer(serializers.ModelSerializer):
         model = Table
         fields = (
             "server_id",
+            "server_name",
             "party_size",
             "address_table_combo",
             "request_made",

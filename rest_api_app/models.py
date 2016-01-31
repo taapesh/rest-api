@@ -6,6 +6,7 @@ from django.contrib.auth.models import (
 class Table(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
     server_id = models.IntegerField(default=-1)
+    server_name = models.CharField(max_length=255, default="")
     party_size = models.IntegerField(default=1)
     request_made = models.BooleanField(default=False)
     time_of_request = models.IntegerField(default=-1)
