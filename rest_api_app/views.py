@@ -282,3 +282,30 @@ def get_orders(request):
     orders = Order.objects.filter(customer_id=request.data.get("user_id"))
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data)
+
+@api_view(["GET"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def create_test_server(request):
+    first_name = "William"
+    last_name = "Woodhouse"
+    email = "woodhouse@gmail.com"
+    password = "12345"
+    
+    try:
+        user = MyUser.objects.create_user(first_name, last_name, email, password)
+        user.is_server = True
+        user.is_working = True
+        user.working_restaurant = "1234 Restaurant St."
+        token = Token.objects.get_or_create(user=user)
+
+        return Response({
+            "auth_token": token[0].key,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "user_id": user.id
+        }, status=status.HTTP_201_CREATED)
+
+    except IntegrityError:
+        return Response({"error": "Email is already in use"}, status=status.HTTP_409_CONFLICT)

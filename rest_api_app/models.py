@@ -71,24 +71,17 @@ class MyUserManager(BaseUserManager):
         return user
 
 class MyUser(AbstractBaseUser):
-    email = models.EmailField(
-        verbose_name="email address",
-        max_length=255,
-        unique=True,
-    )
-    first_name = models.CharField(
-        max_length=255,
-        unique=False,
-        default="",
-    )
-    last_name = models.CharField(
-        max_length=255,
-        unique=False,
-        default="",
-    )
+    email = models.EmailField(verbose_name="email address", max_length=255, unique=True,)
+    first_name = models.CharField(max_length=255, default="",)
+    last_name = models.CharField(max_length=255, default="",)
     active_table_number = models.IntegerField(default=-1)
     active_restaurant = models.CharField(max_length=255,default="")
     address_table_combo = models.CharField(max_length=255, default="")
+    is_server = models.BooleanField(default=False)
+    working_restaurant = models.CharField(max_length=255, default="")
+    server_rating = models.IntegerField(default=-1)
+    num_server_ratings = models.IntegerField(default=0)
+    is_working = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
