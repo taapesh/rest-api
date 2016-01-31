@@ -48,3 +48,4 @@ class ReceiptSerializer(serializers.ModelSerializer):
             "server_name",
             "server_rating",
         )
+        

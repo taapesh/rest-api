@@ -58,6 +58,14 @@ def get_all_tables(request):
 @api_view(["GET"])
 #@authentication_classes([TokenAuthentication])
 #@permission_classes([permissions.IsAuthenticated])
+def get_server_tables(request):
+    tables = Table.objects.filter(server_id=request.data.get("user_id"))
+    serializer = TableSerializer(tables, many=True)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+#@authentication_classes([TokenAuthentication])
+#@permission_classes([permissions.IsAuthenticated])
 def get_users_at_table(request):
     users = MyUser.objects.filter(address_table_combo=request.data.get("address_table_combo"))
     serializer = UserSerializer(users, many=True)
@@ -198,4 +206,3 @@ def get_orders(request):
     orders = Order.objects.filter(customer_id=request.data.get("user_id"))
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data)
-
