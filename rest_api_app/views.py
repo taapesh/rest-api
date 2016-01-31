@@ -36,6 +36,7 @@ def login(request):
         user = MyUser.objects.get(email=email)
         if user.check_password(password):
             token = Token.objects.get_or_create(user=user)
+            
             return Response({
                 "auth_token": token[0].key,
                 "first_name": user.first_name,
@@ -63,10 +64,18 @@ def register(request):
     
     try:
         user = MyUser.objects.create_user(first_name, last_name, email, password)
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        token = Token.objects.get_or_create(user=user)
+
+        return Response({
+            "auth_token": token[0].key,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "user_id": user.id
+        }, status=status.HTTP_201_CREATED)
+
     except IntegrityError:
-        return Response({"error": "Email is already in use"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Email is already in use"}, status=status.HTTP_409_CONFLICT)
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
