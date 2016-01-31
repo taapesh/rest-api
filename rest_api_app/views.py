@@ -29,6 +29,7 @@ def get_all_users(request):
 
 @api_view(["POST"])
 def login(request):
+    return Response({"success": "Made it"}, status=status.HTTP_200_OK)
     email = request.data.get("email")
     password = request.data.get("password")
 
@@ -36,7 +37,7 @@ def login(request):
         user = MyUser.objects.get(email=email)
         if user.check_password(password):
             token = Token.objects.get_or_create(user=user)
-            return Response({"auth_token": token[0].key})
+            return Response({"auth_token": token[0].key}, status=status.HTTP_200_OK)
 
     except MyUser.DoesNotExist:
         return Response({"error": "There was a problem"}, status=status.HTTP_400_BAD_REQUEST)
