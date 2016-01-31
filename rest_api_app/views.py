@@ -283,9 +283,7 @@ def get_orders(request):
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data)
 
-@api_view(["GET"])
-@authentication_classes([TokenAuthentication])
-@permission_classes([permissions.IsAuthenticated])
+@api_view(["POST"])
 def create_test_server(request):
     first_name = "William"
     last_name = "Woodhouse"
