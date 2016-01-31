@@ -3,6 +3,7 @@ from django.contrib import admin
 from rest_api_app import views
 
 urlpatterns = [
+    url(r"^$", views.api_root),
     url(r"^admin/", admin.site.urls),
     url(r"^login/", views.login),
     url(r"^logout/", views.logout),

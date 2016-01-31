@@ -14,6 +14,13 @@ from django.db.models import F
 
 from django.db import IntegrityError
 
+@api_view()
+def api_root(request):
+    """ tablemate API """
+    return Response({
+        "login": "http://127.0.0.1:8000/login/"
+    })
+
 @api_view(["GET"])
 def get_all_users(request):
     users = MyUser.objects.all()
