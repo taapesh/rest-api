@@ -295,6 +295,7 @@ def create_test_server(request):
         user.is_server = True
         user.is_working = True
         user.working_restaurant = "1234 Restaurant St."
+        user.save()
         token = Token.objects.get_or_create(user=user)
 
         return Response({
