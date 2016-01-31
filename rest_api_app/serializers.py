@@ -33,6 +33,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "table_number",
             "restaurant_address",
             "address_table_combo",
+            "receipt_id",
         )
 
 class ReceiptSerializer(serializers.ModelSerializer):

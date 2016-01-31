@@ -138,7 +138,7 @@ def finish_and_pay(request):
         customer_id=user_id, address_table_combo=address_table_combo, active_order=True)
 
     total = 0.00
-    if orders:
+    if orders.exists():
         subtotal = orders.aggregate(Sum("order_price")).get("order_price__sum", 0.00)
 
         # Add tax, attempt payment
@@ -164,16 +164,8 @@ def finish_and_pay(request):
     )
     receipt.save()
     orders.update(payment_pending=False, active_order=False, receipt_id=receipt.id)
-    
-    """
-    Order.objects
-        .filter(customer_id=customer_id)
-        .filter(address_table_combo=address_table_combo)
-        .filter(active_order=True)
-        .update(payment_pending=False, active_order=False, receipt_id=receipt.id)
-    """
-    return Response({"message": "Payment successful", "bill": total}, status=status.HTTP_200_OK)
 
+    return Response({"message": "Payment successful", "bill": total}, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
 #@authentication_classes([TokenAuthentication])
@@ -199,10 +191,11 @@ def get_receipts(request):
     serializer = ReceiptSerializer(receipts, many=True)
     return Response(serializer.data)
 
-@api_view(["POST"])
+@api_view(["GET"])
 #@authentication_classes([TokenAuthentication])
 #@permission_classes([permissions.IsAuthenticated])
-def delete_all_orders(request):
-    Order.objects.all().delete()
-    return Response({"success": "Deleted orders"})
+def get_orders(request):
+    orders = Order.objects.filter(customer_id=request.data.get("user_id"))
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data)
 

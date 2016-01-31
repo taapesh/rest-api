@@ -20,4 +20,5 @@ urlpatterns += [
     url(r"^get_table_orders/", views.get_table_orders),
     url(r"^finish_and_pay/", views.finish_and_pay),
     url(r"^get_receipts/", views.get_receipts),
+    url(r"^get_orders/", views.get_orders),
 ]
