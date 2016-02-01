@@ -107,6 +107,7 @@ def create_or_join_table(request):
         table.server_id = server.get("server_id")
         table.server_name = server.get("server_name")
         table.restaurant_name = restaurant_name
+        table.restaurant_address = restaurant_address
     table.save()
 
     MyUser.objects.filter(id=request.data.get("user_id")).update(

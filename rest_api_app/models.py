@@ -14,6 +14,7 @@ class Table(models.Model):
     time_of_finish = models.IntegerField(default=-1)
     address_table_combo = models.CharField(max_length=255, default="", unique=True)
     restaurant_name = models.CharField(max_length=255, default="")
+    restaurant_address = models.CharField(max_length=255, default="")
     new_table = models.BooleanField(default=True)
 
     class Meta:
