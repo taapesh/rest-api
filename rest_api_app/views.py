@@ -287,10 +287,16 @@ def get_table_orders(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def get_table(request):
+    table_id = request.user.active_table_id
+    
+    if table_id == -1:
+        return Response({"error": "No active table"}, status=status.HTTP_404_NOT_FOUND)
+
     try:
-        table = Table.objects.get(id=request.data.get("table_id"))
+        table = Table.objects.get(id=table_id)
         serializer = TableSerializer(table)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     except Table.DoesNotExist:
         return Response({"error": "Table does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
