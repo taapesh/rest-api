@@ -143,7 +143,7 @@ def get_all_tables(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def get_server_tables(request):
-    tables = Table.objects.filter(server_id=request.data.get("user_id"))
+    tables = Table.objects.filter(server_id=request.user.id)
     serializer = TableSerializer(tables, many=True)
     return Response(serializer.data)
 
