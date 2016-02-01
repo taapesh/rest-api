@@ -304,7 +304,7 @@ def get_table_object(address_table_combo):
 @authentication_classes([TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def get_active_table_id(request):
-    return Response(request.user.active_table_id, status=status.HTTP_200_OK)
+    return Response({"table_id": request.user.active_table_id}, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])
