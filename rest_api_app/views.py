@@ -94,6 +94,9 @@ def create_or_join_table(request):
     restaurant_name = request.data.get("restaurant_name")
     server = find_server(restaurant_address)
 
+    if server.get("server_id") == -1:
+        return Response({"error": "Something went wrong"}, status=status.HTTP_409_CONFLICT)
+
     # Attempt to create table, if does not exist
     table, created = Table.objects.get_or_create(
         address_table_combo=address_table_combo,
@@ -109,7 +112,8 @@ def create_or_join_table(request):
     MyUser.objects.filter(id=request.data.get("user_id")).update(
         address_table_combo=address_table_combo,
         active_table_number=request.data.get("table_number"),
-        active_restaurant=restaurant_address
+        active_restaurant=restaurant_address,
+        active_table_id=table.id
     )
     
     return Response({
@@ -193,7 +197,7 @@ def find_server(restaurant_address):
         if load < min_load:
             min_load = load
             min_load_server_id = server.id
-            
+
     return {"server_id": min_load_server_id, "server_name": server.first_name}
 
 
@@ -230,7 +234,7 @@ def order_delivered(request):
 @permission_classes([permissions.IsAuthenticated])
 def finish_and_pay(request):
     address_table_combo = request.data.get("address_table_combo")
-    table = get_table(address_table_combo)
+    table = get_table_object(address_table_combo)
 
     if table is None:
         return Response({"error": "Table does not exist"}, status=status.HTTP_404_NOT_FOUND)
@@ -278,12 +282,29 @@ def get_table_orders(request):
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data)
 
-def get_table(address_table_combo):
+@api_view(["GET"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_table(request):
+    try:
+        table = Table.objects.get(id=request.data.get("table_id"))
+        serializer = TableSerializer(table)
+        return Response(serializer.data)
+    except Table.DoesNotExist:
+        return Response({"error": "Table does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+def get_table_object(address_table_combo):
     try:
         table = Table.objects.get(address_table_combo=address_table_combo)
         return table
     except Table.DoesNotExist:
         None
+
+@api_view(["GET"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_active_table_id(request):
+    return Response(request.user.active_table_id, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])

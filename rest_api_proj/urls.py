@@ -24,6 +24,7 @@ urlpatterns = [
     url(r"^get_orders/", views.get_orders),
     url(r"^get_user_info", views.get_user_info),
     url(r"^get_all_users/", views.get_all_users),
+    url(r"^active_table_id/", views.get_active_table_id),
 
     url(r"^create_test_server/", views.create_test_server),
 ]
