@@ -145,7 +145,8 @@ def get_all_tables(request):
 def get_server_tables(request):
     tables = Table.objects.filter(server_id=request.user.id)
     serializer = TableSerializer(tables, many=True)
-    return Response(serializer.data)
+    return Response({"id_passed":request.user.id}, status=status.HTTP_200_OK)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])
