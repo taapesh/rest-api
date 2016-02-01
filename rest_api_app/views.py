@@ -145,8 +145,6 @@ def get_all_tables(request):
 def get_server_tables(request):
     tables = Table.objects.filter(server_id=request.user.id)
     serializer = TableSerializer(tables, many=True)
-    exists = len(tables) > 0
-    return Response({"found table":exists}, status=status.HTTP_200_OK)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
