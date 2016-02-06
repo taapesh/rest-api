@@ -76,6 +76,7 @@ class MyUser(AbstractBaseUser):
     email = models.EmailField(verbose_name="email address", max_length=255, unique=True,)
     first_name = models.CharField(max_length=255, default="",)
     last_name = models.CharField(max_length=255, default="",)
+    current_server_id = models.IntegerField(default=-1)
     active_table_id = models.IntegerField(default=-1)
     active_table_number = models.IntegerField(default=-1)
     active_restaurant = models.CharField(max_length=255,default="")

@@ -93,8 +93,9 @@ def create_or_join_table(request):
     restaurant_address = request.data.get("restaurant_address")
     restaurant_name = request.data.get("restaurant_name")
     server = find_server(restaurant_address)
+    server_id = server.get("server_id")
 
-    if server.get("server_id") == -1:
+    if server_id == -1:
         return Response({"error": "Something went wrong"}, status=status.HTTP_409_CONFLICT)
 
     # Attempt to create table, if does not exist
@@ -104,7 +105,7 @@ def create_or_join_table(request):
     if not created:
         table.party_size += 1
     else:
-        table.server_id = server.get("server_id")
+        table.server_id = server_id
         table.server_name = server.get("server_name")
         table.restaurant_name = restaurant_name
         table.restaurant_address = restaurant_address
@@ -114,7 +115,8 @@ def create_or_join_table(request):
         address_table_combo=address_table_combo,
         active_table_number=request.data.get("table_number"),
         active_restaurant=restaurant_address,
-        active_table_id=table.id
+        active_table_id=table.id,
+        current_server_id=server.get("server_id")
     )
     
     return Response({
@@ -188,10 +190,10 @@ def find_server(restaurant_address):
     servers = list(MyUser.objects.filter(working_restaurant=restaurant_address, is_working=True))
     
     if not servers:
-        {"server_id": -1, "server_name": ""}
+        return {"server_id": -1, "server_name": ""}
 
     min_load_server_id = -1
-    min_load = 1000
+    min_load = 10000
     
     for server in servers:
         load = Table.objects.filter(server_id=server.id).count()
@@ -201,6 +203,11 @@ def find_server(restaurant_address):
 
     return {"server_id": min_load_server_id, "server_name": server.first_name}
 
+@api_view(["GET"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_server_id(request):
+    return Response({"server_id": request.user.current_server_id}, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
