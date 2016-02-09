@@ -161,10 +161,18 @@ def get_users_at_table(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def request_service(request):
+    address_table_combo = request.data.get("address_table_combo")
+
     table_request, created = TableRequest.objects.get_or_create(
-        address_table_combo=request.data.get("address_table_combo"),
+        address_table_combo=address_table_combo,
     )
     if created:
+        table = get_table_object(address_table_combo)
+        
+        if table is not None:
+            table.request_made = True
+            table.save()
+
         return Response({"success": "Request made"}, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Request already made"}, status=status.HTTP_409_CONFLICT)
@@ -173,7 +181,15 @@ def request_service(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def serve_request(request):
-    TableRequest.objects.filter(address_table_combo=request.data.get("address_table_combo")).delete()
+    address_table_combo = request.data.get("address_table_combo")
+    TableRequest.objects.filter(address_table_combo=address_table_combo).delete()
+
+    table = get_table_object(address_table_combo)
+        
+    if table is not None:
+        table.request_made = False
+        table.save()
+
     return Response({"success": "Request served"}, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
