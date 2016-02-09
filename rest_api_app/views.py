@@ -167,7 +167,7 @@ def request_service(request):
     if created:
         return Response({"success": "Request made"}, status=status.HTTP_200_OK)
     else:
-        return Response({"error": "Request already made"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Request already made"}, status=status.HTTP_409_CONFLICT)
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
