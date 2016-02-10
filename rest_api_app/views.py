@@ -281,10 +281,9 @@ def finish_and_pay(request):
     # Assuming payment was successful
     table.party_size -= 1
     table.save()
-    """
+    
     if table.party_size == 0:
-        table.delete()
-    """    
+        table.delete()   
 
     receipt = Receipt(
         customer_id=user_id,
