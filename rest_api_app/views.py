@@ -123,8 +123,10 @@ def create_or_join_table(request):
         "message": "Joined table",
         "party_size": table.party_size,
         "restaurant_name": table.restaurant_name,
+        "restaurant_address": table.restaurant_address,
         "server_id": table.server_id,
         "server_name": table.server_name,
+        "address_table_combo": table.address_table_combo,
     }, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
@@ -290,7 +292,6 @@ def finish_and_pay(request):
         server_name=request.data.get("server_name"),
         restaurant_name=request.data.get("restaurant_name"),
         restaurant_address=request.data.get("restaurant_address"),
-        server_rating=request.data.get("server_rating", -1)
     )
     receipt.save()
     orders.update(payment_pending=False, active_order=False, receipt_id=receipt.id)
